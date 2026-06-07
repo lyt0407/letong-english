@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffb84d" />
+  <meta name="description" content="乐桐的一周英语启蒙小火车：适合一年级零基础孩子。" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>乐桐的英语小火车 · 一周启蒙版</title>
+  <style>
+    :root {
+      --bg: #fff8ec;
+      --card: #ffffff;
+      --ink: #2f2b26;
+      --muted: #766f67;
+      --brand: #ffb84d;
+      --brand-deep: #ff8c42;
+      --green: #4caf50;
+      --red: #ef5350;
+      --blue: #5aa9ff;
+      --purple: #8b68ff;
+      --shadow: 0 12px 30px rgba(88, 55, 20, 0.12);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: radial-gradient(circle at 20% 5%, #fff0ca 0 28%, transparent 29%), var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .app { width: min(1040px, 100%); margin: 0 auto; padding: 18px 16px 94px; }
+    header {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin: 4px 0 16px;
+    }
+    .title h1 { font-size: clamp(25px, 6vw, 42px); line-height: 1.05; margin: 0; }
+    .title p { margin: 8px 0 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+    .train {
+      width: 78px; height: 78px; border-radius: 22px;
+      background: linear-gradient(145deg, #fff, #ffe2a7);
+      display: grid; place-items: center; font-size: 43px;
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
+    .panel {
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(255, 184, 77, 0.35);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .top-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 820px) { .top-grid { grid-template-columns: 1.05fr .95fr; } }
+    .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .name-input {
+      border: 2px solid #ffe1aa; border-radius: 16px; padding: 10px 12px;
+      background: #fffaf0; color: var(--ink); min-width: 130px; max-width: 180px;
+      outline: none;
+    }
+    .pill {
+      border: 0; border-radius: 999px; padding: 11px 15px;
+      background: #fff1d6; color: #70450b; cursor: pointer;
+      min-height: 44px;
+    }
+    .pill.primary { background: var(--brand); color: #402000; font-weight: 800; }
+    .pill.good { background: #dff6e2; color: #1b6d2a; }
+    .pill.blue { background: #e2f0ff; color: #125a99; }
+    .pill.purple { background: #eee8ff; color: #422aa3; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+    .stat { background: #fff7e8; border-radius: 18px; padding: 12px; text-align: center; }
+    .stat strong { display: block; font-size: 24px; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    nav {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+      background: rgba(255,255,255,0.95); border-top: 1px solid #ffe0a3;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;
+      padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+      backdrop-filter: blur(10px);
+    }
+    .tab {
+      border: 0; background: transparent; border-radius: 18px; padding: 8px 2px; color: #665a4f;
+      min-height: 56px; cursor: pointer; font-size: 12px;
+    }
+    .tab .icon { display: block; font-size: 22px; margin-bottom: 2px; }
+    .tab.active { background: #fff0ce; color: #3f2600; font-weight: 800; }
+    main { margin-top: 14px; }
+    section[hidden] { display: none; }
+    h2 { margin: 0 0 10px; font-size: 25px; }
+    h3 { margin: 18px 0 8px; }
+    .hint { color: var(--muted); margin: 0 0 12px; line-height: 1.65; }
+    .week-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 12px; }
+    @media (min-width: 760px) { .week-grid { grid-template-columns: repeat(7, minmax(0,1fr)); } }
+    .day-card {
+      border: 2px solid #ffe0a6; border-radius: 20px; background: #fff; padding: 12px 8px;
+      cursor: pointer; text-align: center; box-shadow: 0 6px 14px rgba(88, 55, 20, 0.07);
+    }
+    .day-card.active { border-color: var(--brand-deep); background: #fff0ce; }
+    .day-card.done { border-color: #9be2a6; }
+    .day-card .day-num { font-weight: 900; font-size: 18px; }
+    .day-card .day-topic { color: var(--muted); font-size: 12px; margin: 3px 0; min-height: 32px; }
+    .day-card .day-stars { min-height: 24px; }
+    .lesson-hero {
+      display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px;
+    }
+    @media (min-width: 820px) { .lesson-hero { grid-template-columns: .9fr 1.1fr; } }
+    .today-box {
+      background: linear-gradient(150deg, #fff, #fff1d0);
+      border-radius: 24px; padding: 16px; border: 2px solid #ffe0a6;
+    }
+    .topic-badge { display: inline-flex; gap: 8px; align-items: center; border-radius: 999px; background: #fff; padding: 8px 12px; color: #70450b; font-weight: 800; }
+    .big-day { font-size: clamp(30px, 8vw, 52px); font-weight: 1000; margin: 12px 0 6px; }
+    .task-list { display: grid; gap: 8px; margin-top: 12px; }
+    .task-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #fff; border-radius: 16px; padding: 10px 12px; }
+    .task-item span:first-child { font-weight: 800; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    @media (min-width: 760px) { .cards { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+    .word-card {
+      background: var(--card); border: 2px solid #ffe0a6; border-radius: 22px; padding: 14px;
+      min-height: 176px; display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 8px 18px rgba(88, 55, 20, 0.08);
+    }
+    .word-card.today-card { border-color: #ffd083; }
+    .emoji { font-size: 52px; line-height: 1; text-align: center; margin: 3px 0 8px; }
+    .word { text-align: center; font-size: 25px; font-weight: 900; letter-spacing: .4px; }
+    .cn { text-align: center; color: var(--muted); margin-top: 3px; }
+    .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .small-btn {
+      border: 0; border-radius: 14px; padding: 10px 8px; background: #fff1d6; cursor: pointer; min-height: 42px;
+    }
+    .small-btn.done { background: #e0f5e4; }
+    .daily-list { display: grid; gap: 12px; }
+    .daily-item { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: center; background: #fff; border-radius: 22px; padding: 12px; border: 2px solid #ffe2aa; }
+    .daily-emoji { font-size: 48px; text-align: center; }
+    .big-word { font-size: 30px; font-weight: 900; }
+    .quiz-stage { text-align: center; }
+    .big-listen {
+      width: min(250px, 70vw); aspect-ratio: 1; border-radius: 48px; border: 0;
+      background: linear-gradient(160deg, #fff, #ffe0a0); box-shadow: var(--shadow);
+      font-size: 74px; cursor: pointer; margin: 8px auto 18px; display: grid; place-items: center;
+    }
+    .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .option {
+      border: 3px solid transparent; background: #fff; border-radius: 24px; padding: 12px 6px; cursor: pointer;
+      min-height: 132px; box-shadow: 0 8px 18px rgba(88, 55, 20, 0.08);
+    }
+    .option .o-emoji { font-size: 46px; display: block; }
+    .option .o-cn { display: block; color: var(--muted); margin-top: 6px; }
+    .option.correct { border-color: var(--green); background: #edf9ef; }
+    .option.wrong { border-color: var(--red); background: #fff0f0; }
+    .feedback { min-height: 34px; font-size: 20px; font-weight: 800; margin: 10px 0; }
+    .read-box { text-align: center; padding: 20px; background: #fff; border-radius: 26px; border: 2px solid #ffe2aa; }
+    .read-emoji { font-size: 86px; }
+    .read-word { font-size: clamp(42px, 13vw, 76px); font-weight: 1000; margin: 8px 0; }
+    .read-cn { color: var(--muted); font-size: 20px; }
+    .sentence-box {
+      background: #fff; border-radius: 26px; border: 2px solid #e2f0ff; padding: 18px; text-align: center;
+    }
+    .sentence-en { font-size: clamp(28px, 8vw, 54px); font-weight: 1000; margin: 8px 0; }
+    .sentence-cn { color: var(--muted); font-size: 18px; }
+    .phonics-grid { display: grid; gap: 12px; }
+    @media (min-width: 760px) { .phonics-grid { grid-template-columns: repeat(3, 1fr); } }
+    .phonic-card { background: #fff; border-radius: 24px; padding: 16px; border: 2px solid #e2f0ff; }
+    .letter { font-size: 54px; font-weight: 1000; color: #1f6fb2; }
+    .parent-grid { display: grid; gap: 12px; }
+    @media (min-width: 760px) { .parent-grid { grid-template-columns: 1fr 1fr; } }
+    .parent-card { background: #fff; border-radius: 22px; padding: 14px; border: 2px solid #ffe2aa; }
+    .parent-card ul { margin: 8px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.7; }
+    .footer-note { color: var(--muted); font-size: 13px; line-height: 1.6; margin-top: 14px; }
+    .stars-line { font-size: 24px; letter-spacing: 2px; min-height: 34px; }
+    .progress-track { height: 12px; background: #ffe8bc; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--brand), var(--brand-deep)); border-radius: 99px; transition: width .25s ease; }
+    .toast {
+      position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%) translateY(20px);
+      background: #2e2a24; color: #fff; border-radius: 999px; padding: 12px 18px;
+      opacity: 0; pointer-events: none; transition: .25s ease; z-index: 50; white-space: nowrap;
+      max-width: calc(100vw - 28px); overflow: hidden; text-overflow: ellipsis;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">
+        <h1>乐桐的英语小火车</h1>
+        <p>一周启蒙版：每天 10 分钟，先听懂、敢开口，再慢慢接触自然拼读。</p>
+      </div>
+      <div class="train" aria-hidden="true">🚆</div>
+    </header>
+
+    <div class="top-grid">
+      <div class="panel">
+        <h2>开始学习</h2>
+        <p class="hint">先点“开启声音”。每一天都有固定主题、4 个核心单词、听音选图、跟读和一句简单英文。</p>
+        <div class="row">
+          <label for="childName">宝贝名字</label>
+          <input id="childName" class="name-input" value="乐桐" />
+          <button class="pill primary" id="soundBtn">🔊 开启声音</button>
+          <button class="pill" id="resetBtn">重置进度</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>学习进度</h2>
+        <div class="stars-line" id="starsLine"></div>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="stats">
+          <div class="stat"><strong id="knownCount">0</strong><span>已会单词</span></div>
+          <div class="stat"><strong id="quizCount">0</strong><span>答对次数</span></div>
+          <div class="stat"><strong id="readCount">0</strong><span>跟读次数</span></div>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section id="week" class="panel">
+        <h2>一周路线</h2>
+        <p class="hint">建议每天只完成 1 天，不急着背拼写。乐桐能听出来、点对、愿意跟读，就是成功。</p>
+        <div class="week-grid" id="weekGrid"></div>
+        <div class="lesson-hero">
+          <div class="today-box">
+            <span class="topic-badge" id="topicBadge">🚂 Day 1</span>
+            <div class="big-day" id="bigDayTitle">动物和水果</div>
+            <p class="hint" id="dayGoal"></p>
+            <div class="task-list" id="taskList"></div>
+          </div>
+          <div>
+            <h3>今天的 4 个核心单词</h3>
+            <div class="cards" id="todayCards"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cards" class="panel" hidden>
+        <h2>单词小卡</h2>
+        <p class="hint">先看图、听英文、跟着说。不要要求乐桐马上会拼写。</p>
+        <div class="cards" id="wordCards"></div>
+      </section>
+
+      <section id="quiz" class="panel" hidden>
+        <h2>听音选图</h2>
+        <p class="hint">点大喇叭听单词，再选对应图片。答对后会用中文鼓励乐桐。</p>
+        <div class="quiz-stage">
+          <button id="listenBtn" class="big-listen" aria-label="listen">🔊</button>
+          <div class="feedback" id="feedback"></div>
+          <div class="options" id="options"></div>
+          <button class="pill blue" id="nextQuizBtn">换一题</button>
+        </div>
+      </section>
+
+      <section id="read" class="panel" hidden>
+        <h2>跟读打卡</h2>
+        <p class="hint">家长先点“听一遍”，乐桐跟读后，再点“我读完了”。</p>
+        <div class="read-box">
+          <div class="read-emoji" id="readEmoji"></div>
+          <div class="read-word" id="readWord"></div>
+          <div class="read-cn" id="readCn"></div>
+          <div class="row" style="justify-content:center;margin-top:18px">
+            <button class="pill primary" id="readListenBtn">🔊 听一遍</button>
+            <button class="pill good" id="readDoneBtn">✅ 我读完了</button>
+            <button class="pill" id="nextReadBtn">换一个</button>
+          </div>
+        </div>
+        <h3>今天的一句话</h3>
+        <div class="sentence-box">
+          <div class="sentence-en" id="sentenceEn"></div>
+          <div class="sentence-cn" id="sentenceCn"></div>
+          <div class="row" style="justify-content:center;margin-top:16px">
+            <button class="pill blue" id="sentenceListenBtn">🔊 听句子</button>
+            <button class="pill good" id="sentenceDoneBtn">⭐ 句子读完了</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="phonics" class="panel" hidden>
+        <h2>自然拼读启蒙</h2>
+        <p class="hint">这不是音标课，只让乐桐知道：字母在单词里也有自己的声音。</p>
+        <div class="phonics-grid" id="phonicsGrid"></div>
+        <p class="footer-note">建议：每天最多讲 1 个字母音，用当天的单词来听和模仿，不用解释复杂规则。</p>
+      </section>
+
+      <section id="parent" class="panel" hidden>
+        <h2>家长中心</h2>
+        <p class="hint">这一页给家长看，用来安排一周学习节奏。</p>
+        <div class="parent-grid">
+          <div class="parent-card">
+            <h3>每天 10 分钟流程</h3>
+            <ul>
+              <li>第 1 分钟：打开声音，选当天 Day。</li>
+              <li>第 2-4 分钟：点单词卡，听英文。</li>
+              <li>第 5-7 分钟：玩“听音选图”。</li>
+              <li>第 8-9 分钟：跟读 2-3 个单词。</li>
+              <li>第 10 分钟：读一句简单英文，拿星星。</li>
+            </ul>
+          </div>
+          <div class="parent-card">
+            <h3>不要急着做的事</h3>
+            <ul>
+              <li>不要一开始学音标。</li>
+              <li>不要要求默写。</li>
+              <li>不要纠正太多发音细节。</li>
+              <li>不要一次学太多词。</li>
+              <li>重点是：听得懂、愿意说、觉得好玩。</li>
+            </ul>
+          </div>
+          <div class="parent-card">
+            <h3>一周目标</h3>
+            <ul id="parentGoals"></ul>
+          </div>
+          <div class="parent-card">
+            <h3>复习建议</h3>
+            <ul>
+              <li>第 2 天开始，每天先复习昨天 2 个词。</li>
+              <li>第 7 天以复习为主，可以让乐桐自己当“小老师”。</li>
+              <li>答错不要批评，直接说“没关系，再听一次”。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav aria-label="main tabs">
+    <button class="tab active" data-tab="week"><span class="icon">🗓️</span>一周</button>
+    <button class="tab" data-tab="cards"><span class="icon">📖</span>卡片</button>
+    <button class="tab" data-tab="quiz"><span class="icon">🎧</span>听音</button>
+    <button class="tab" data-tab="read"><span class="icon">🗣️</span>跟读</button>
+    <button class="tab" data-tab="phonics"><span class="icon">🔥</span>拼读</button>
+  </nav>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const storageKey = "letong-english-week-v2";
+
+    const lessons = [
+      {
+        day: 1,
+        topic: "动物和水果",
+        icon: "🍎",
+        goal: "目标：听到 apple、cat、dog、fish 能选对图片，并愿意跟读。",
+        sentence: { en: "I see a cat.", cn: "我看见一只猫。" },
+        words: [
+          { w: "apple", cn: "苹果", emoji: "🍎", sound: "A" },
+          { w: "cat", cn: "猫", emoji: "🐱", sound: "C" },
+          { w: "dog", cn: "狗", emoji: "🐶", sound: "D" },
+          { w: "fish", cn: "鱼", emoji: "🐟", sound: "F" }
+        ]
+      },
+      {
+        day: 2,
+        topic: "玩具和学习用品",
+        icon: "📖",
+        goal: "目标：把英文声音和身边物品连起来，不要求拼写。",
+        sentence: { en: "I have a book.", cn: "我有一本书。" },
+        words: [
+          { w: "book", cn: "书", emoji: "📖", sound: "B" },
+          { w: "ball", cn: "球", emoji: "⚽", sound: "B" },
+          { w: "bag", cn: "书包", emoji: "🎒", sound: "B" },
+          { w: "pen", cn: "笔", emoji: "🖊️", sound: "P" }
+        ]
+      },
+      {
+        day: 3,
+        topic: "颜色",
+        icon: "🌈",
+        goal: "目标：先会听懂颜色，再用颜色说简单短语。",
+        sentence: { en: "It is red.", cn: "它是红色的。" },
+        words: [
+          { w: "red", cn: "红色", emoji: "🔴", sound: "R" },
+          { w: "blue", cn: "蓝色", emoji: "🔵", sound: "B" },
+          { w: "yellow", cn: "黄色", emoji: "🟡", sound: "Y" },
+          { w: "green", cn: "绿色", emoji: "🟢", sound: "G" }
+        ]
+      },
+      {
+        day: 4,
+        topic: "数字 1-4",
+        icon: "🔢",
+        goal: "目标：听到数字能选对，跟读时不追求快，读清楚就好。",
+        sentence: { en: "I see two dogs.", cn: "我看见两只狗。" },
+        words: [
+          { w: "one", cn: "一", emoji: "1️⃣", sound: "O" },
+          { w: "two", cn: "二", emoji: "2️⃣", sound: "T" },
+          { w: "three", cn: "三", emoji: "3️⃣", sound: "T" },
+          { w: "four", cn: "四", emoji: "4️⃣", sound: "F" }
+        ]
+      },
+      {
+        day: 5,
+        topic: "天空和自然",
+        icon: "☀️",
+        goal: "目标：用大图像帮助记忆，适合睡前或散步时复习。",
+        sentence: { en: "I see the sun.", cn: "我看见太阳。" },
+        words: [
+          { w: "sun", cn: "太阳", emoji: "☀️", sound: "S" },
+          { w: "moon", cn: "月亮", emoji: "🌙", sound: "M" },
+          { w: "star", cn: "星星", emoji: "⭐", sound: "S" },
+          { w: "tree", cn: "树", emoji: "🌳", sound: "T" }
+        ]
+      },
+      {
+        day: 6,
+        topic: "家人和身体",
+        icon: "👨‍👩‍👧",
+        goal: "目标：把英语和自己身边的人、身体部位连起来。",
+        sentence: { en: "This is my hand.", cn: "这是我的手。" },
+        words: [
+          { w: "mom", cn: "妈妈", emoji: "👩", sound: "M" },
+          { w: "dad", cn: "爸爸", emoji: "👨", sound: "D" },
+          { w: "hand", cn: "手", emoji: "✋", sound: "H" },
+          { w: "eye", cn: "眼睛", emoji: "👁️", sound: "E" }
+        ]
+      },
+      {
+        day: 7,
+        topic: "快乐复习日",
+        icon: "⭐",
+        goal: "目标：不学太多新内容，复习一周高频词，让乐桐当小老师。",
+        sentence: { en: "I like English.", cn: "我喜欢英语。" },
+        words: [
+          { w: "hello", cn: "你好", emoji: "👋", sound: "H" },
+          { w: "yes", cn: "是的", emoji: "✅", sound: "Y" },
+          { w: "no", cn: "不是", emoji: "🚫", sound: "N" },
+          { w: "star", cn: "星星", emoji: "⭐", sound: "S" }
+        ]
+      }
+    ];
+
+    const allWords = lessons.flatMap(lesson => lesson.words.map(word => ({ ...word, day: lesson.day, topic: lesson.topic })));
+    const uniqueWords = allWords.filter((item, index, arr) => index === arr.findIndex(x => x.w === item.w));
+
+    const phonics = [
+      { letter: "A", line: "A is in apple.", tip: "像 apple 开头那样，先听和模仿，不用讲音标。", example: "apple" },
+      { letter: "B", line: "B is in book, ball and bag.", tip: "B 可以配合 book、ball、bag 一起听。", example: "book" },
+      { letter: "C", line: "C is in cat.", tip: "C 在 cat 里是短促的声音，孩子能模仿就好。", example: "cat" },
+      { letter: "D", line: "D is in dog and dad.", tip: "D 和 dog、dad 放在一起记，比较容易。", example: "dog" },
+      { letter: "F", line: "F is in fish and four.", tip: "F 的气流感明显，可以轻轻模仿。", example: "fish" },
+      { letter: "S", line: "S is in sun and star.", tip: "S 像小蛇声，用 sun、star 练习很自然。", example: "sun" },
+      { letter: "M", line: "M is in mom and moon.", tip: "M 的声音适合慢慢哼出来，降低开口难度。", example: "mom" },
+      { letter: "T", line: "T is in two, tree and ten.", tip: "T 可以在数字和自然词里反复听。", example: "two" },
+      { letter: "H", line: "H is in hand and hello.", tip: "H 可以配合 hello 练习，很适合打招呼。", example: "hello" }
+    ];
+
+    const praises = [
+      "{name}真棒，答对啦！",
+      "哇，{name}太厉害了！",
+      "{name}很会听，再来一题！",
+      "给{name}一颗星，超棒！",
+      "{name}进步了，继续加油！",
+      "小火车开动啦，{name}又答对了！"
+    ];
+
+    const readPraises = [
+      "{name}开口了，这就是进步！",
+      "{name}读得很勇敢，真棒！",
+      "好样的，{name}又完成一次跟读！",
+      "{name}的英语小火车又前进一站！"
+    ];
+
+    let state = loadState();
+    let quizAnswer = null;
+    let readIndex = 0;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return { name: "乐桐", known: [], quizCorrect: 0, readDone: 0, stars: 0, currentDay: 1, sentenceDone: [] };
+    }
+
+    function normalizeState() {
+      state.name = state.name || "乐桐";
+      state.known = Array.isArray(state.known) ? state.known : [];
+      state.quizCorrect = Number(state.quizCorrect || 0);
+      state.readDone = Number(state.readDone || 0);
+      state.stars = Number(state.stars || 0);
+      state.currentDay = Math.min(7, Math.max(1, Number(state.currentDay || 1)));
+      state.sentenceDone = Array.isArray(state.sentenceDone) ? state.sentenceDone : [];
+    }
+
+    function saveState() {
+      state.name = childNameInput.value.trim() || "乐桐";
+      localStorage.setItem(storageKey, JSON.stringify(state));
+      renderStats();
+    }
+
+    function getName() { return childNameInput.value.trim() || "乐桐"; }
+    function currentLesson() { return lessons.find(x => x.day === state.currentDay) || lessons[0]; }
+    function currentWords() { return currentLesson().words; }
+
+    function speak(text, lang = "zh-CN", rate = 0.92) {
+      if (!window.speechSynthesis) {
+        showToast("这个浏览器暂时不支持语音");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = rate;
+      u.pitch = lang.startsWith("zh") ? 1.12 : 1.0;
+      window.speechSynthesis.speak(u);
+    }
+
+    function speakWord(word) { speak(word, "en-US", 0.78); }
+    function speakSentence(sentence) { speak(sentence, "en-US", 0.72); }
+
+    function praise(kind = "quiz") {
+      const list = kind === "read" ? readPraises : praises;
+      const line = list[Math.floor(Math.random() * list.length)].replace("{name}", getName());
+      speak(line, "zh-CN", 0.93);
+      showToast(line);
+    }
+
+    function showToast(text) {
+      const t = $("toast");
+      t.textContent = text;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1800);
+    }
+
+    function dayKnownCount(day) {
+      const lesson = lessons.find(x => x.day === day);
+      return lesson.words.filter(w => state.known.includes(w.w)).length;
+    }
+
+    function dayIsDone(day) {
+      return dayKnownCount(day) >= 4 || state.sentenceDone.includes(day);
+    }
+
+    function renderWeek() {
+      const grid = $("weekGrid");
+      grid.innerHTML = "";
+      lessons.forEach(lesson => {
+        const btn = document.createElement("button");
+        btn.className = "day-card" + (lesson.day === state.currentDay ? " active" : "") + (dayIsDone(lesson.day) ? " done" : "");
+        const stars = "⭐".repeat(Math.min(4, dayKnownCount(lesson.day)));
+        btn.innerHTML = `<div class="day-num">Day ${lesson.day}</div><div class="day-topic">${lesson.icon} ${lesson.topic}</div><div class="day-stars">${stars || "○○○○"}</div>`;
+        btn.onclick = () => {
+          state.currentDay = lesson.day;
+          readIndex = 0;
+          saveState();
+          renderAll();
+          newQuiz();
+          speak(`现在是第 ${lesson.day} 天，${lesson.topic}。`, "zh-CN", 0.95);
+        };
+        grid.appendChild(btn);
+      });
+
+      const lesson = currentLesson();
+      $("topicBadge").textContent = `${lesson.icon} Day ${lesson.day}`;
+      $("bigDayTitle").textContent = lesson.topic;
+      $("dayGoal").textContent = lesson.goal;
+      $("taskList").innerHTML = `
+        <div class="task-item"><span>1. 听 4 个单词</span><span>${dayKnownCount(lesson.day)}/4</span></div>
+        <div class="task-item"><span>2. 玩听音选图</span><span>🎧</span></div>
+        <div class="task-item"><span>3. 跟读打卡</span><span>🗣️</span></div>
+        <div class="task-item"><span>4. 读一句英文</span><span>${state.sentenceDone.includes(lesson.day) ? "✅" : "⭐"}</span></div>
+      `;
+      renderTodayCards();
+    }
+
+    function renderTodayCards() {
+      const box = $("todayCards");
+      box.innerHTML = "";
+      currentWords().forEach(item => box.appendChild(makeWordCard(item, true)));
+    }
+
+    function makeWordCard(item, today = false) {
+      const card = document.createElement("div");
+      card.className = "word-card" + (today ? " today-card" : "");
+      card.innerHTML = `
+        <div>
+          <div class="emoji">${item.emoji}</div>
+          <div class="word">${item.w}</div>
+          <div class="cn">${item.cn}</div>
+        </div>
+        <div class="card-actions">
+          <button class="small-btn" data-say="${item.w}">🔊 听</button>
+          <button class="small-btn done" data-known="${item.w}">${state.known.includes(item.w) ? "已会" : "我会"}</button>
+        </div>`;
+      return card;
+    }
+
+    function renderCards() {
+      const box = $("wordCards");
+      box.innerHTML = "";
+      uniqueWords.forEach(item => box.appendChild(makeWordCard(item, false)));
+    }
+
+    function renderPhonics() {
+      const box = $("phonicsGrid");
+      box.innerHTML = "";
+      phonics.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "phonic-card";
+        div.innerHTML = `
+          <div class="letter">${p.letter}</div>
+          <strong>${p.line}</strong>
+          <p class="hint" style="margin-top:8px">${p.tip}</p>
+          <button class="pill blue" data-say="${p.example}">🔊 听 ${p.example}</button>`;
+        box.appendChild(div);
+      });
+    }
+
+    function renderParent() {
+      const goals = $("parentGoals");
+      goals.innerHTML = lessons.map(lesson => `<li>Day ${lesson.day}：${lesson.topic}，核心词：${lesson.words.map(w => w.w).join(" / ")}</li>`).join("");
+    }
+
+    function newQuiz() {
+      $("feedback").textContent = "";
+      const pool = currentWords();
+      quizAnswer = pool[Math.floor(Math.random() * pool.length)];
+      const optionPool = uniqueWords.slice();
+      const options = [quizAnswer];
+      while (options.length < 3) {
+        const pick = optionPool[Math.floor(Math.random() * optionPool.length)];
+        if (!options.some(x => x.w === pick.w)) options.push(pick);
+      }
+      options.sort(() => Math.random() - 0.5);
+      const box = $("options");
+      box.innerHTML = "";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.innerHTML = `<span class="o-emoji">${opt.emoji}</span><strong>${opt.w}</strong><span class="o-cn">${opt.cn}</span>`;
+        btn.onclick = () => chooseOption(btn, opt);
+        box.appendChild(btn);
+      });
+      setTimeout(() => speakWord(quizAnswer.w), 200);
+    }
+
+    function chooseOption(btn, opt) {
+      const buttons = Array.from(document.querySelectorAll(".option"));
+      buttons.forEach(b => b.disabled = true);
+      if (opt.w === quizAnswer.w) {
+        btn.classList.add("correct");
+        $("feedback").textContent = "答对啦！";
+        state.quizCorrect += 1;
+        state.stars += 1;
+        if (!state.known.includes(opt.w)) state.known.push(opt.w);
+        saveState();
+        renderWeek();
+        renderCards();
+        praise("quiz");
+      } else {
+        btn.classList.add("wrong");
+        const right = buttons.find(b => b.textContent.includes(quizAnswer.w));
+        if (right) right.classList.add("correct");
+        $("feedback").textContent = "没关系，再听一次。";
+        speak("没关系，" + getName() + "，我们再听一次。", "zh-CN", 0.9);
+      }
+      setTimeout(() => { buttons.forEach(b => b.disabled = false); }, 1200);
+    }
+
+    function renderRead() {
+      const item = currentWords()[readIndex % currentWords().length];
+      $("readEmoji").textContent = item.emoji;
+      $("readWord").textContent = item.w;
+      $("readCn").textContent = item.cn;
+      $("sentenceEn").textContent = currentLesson().sentence.en;
+      $("sentenceCn").textContent = currentLesson().sentence.cn;
+    }
+
+    function markKnown(word) {
+      if (!state.known.includes(word)) {
+        state.known.push(word);
+        state.stars += 1;
+        saveState();
+        showToast("已记录：" + word);
+        speak("真棒，" + getName() + "又学会一个单词。", "zh-CN", 0.92);
+        renderAll();
+      } else {
+        speak("这个单词" + getName() + "已经会啦，真棒。", "zh-CN", 0.92);
+      }
+    }
+
+    function markSentenceDone() {
+      const day = currentLesson().day;
+      if (!state.sentenceDone.includes(day)) {
+        state.sentenceDone.push(day);
+        state.stars += 2;
+      }
+      saveState();
+      renderAll();
+      speak("太棒了，" + getName() + "完成了第" + day + "天的一句话。", "zh-CN", 0.92);
+    }
+
+    function renderStats() {
+      $("knownCount").textContent = state.known.length;
+      $("quizCount").textContent = state.quizCorrect;
+      $("readCount").textContent = state.readDone;
+      const stars = Math.min(state.stars, 12);
+      $("starsLine").textContent = "⭐".repeat(stars) || "还没有星星，开始第一题吧";
+      $("progressBar").style.width = Math.min(100, Math.round(state.known.length / uniqueWords.length * 100)) + "%";
+    }
+
+    function renderAll() {
+      renderWeek();
+      renderCards();
+      renderPhonics();
+      renderParent();
+      renderRead();
+      renderStats();
+    }
+
+    document.addEventListener("click", (e) => {
+      const say = e.target.closest("[data-say]");
+      if (say) speakWord(say.dataset.say);
+      const known = e.target.closest("[data-known]");
+      if (known) markKnown(known.dataset.known);
+    });
+
+    const childNameInput = $("childName");
+    normalizeState();
+    childNameInput.value = state.name || "乐桐";
+    childNameInput.addEventListener("change", saveState);
+
+    $("soundBtn").onclick = () => {
+      saveState();
+      speak("声音打开啦，" + getName() + "今天要坐上英语小火车。", "zh-CN", 0.92);
+    };
+
+    $("resetBtn").onclick = () => {
+      if (confirm("要清空学习记录吗？")) {
+        state = { name: getName(), known: [], quizCorrect: 0, readDone: 0, stars: 0, currentDay: 1, sentenceDone: [] };
+        saveState(); renderAll(); newQuiz();
+      }
+    };
+
+    $("listenBtn").onclick = () => speakWord(quizAnswer ? quizAnswer.w : currentWords()[0].w);
+    $("nextQuizBtn").onclick = newQuiz;
+    $("readListenBtn").onclick = () => speakWord(currentWords()[readIndex % currentWords().length].w);
+    $("readDoneBtn").onclick = () => {
+      state.readDone += 1;
+      state.stars += 1;
+      saveState();
+      praise("read");
+    };
+    $("nextReadBtn").onclick = () => { readIndex += 1; renderRead(); };
+    $("sentenceListenBtn").onclick = () => speakSentence(currentLesson().sentence.en);
+    $("sentenceDoneBtn").onclick = markSentenceDone;
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const id = tab.dataset.tab;
+        document.querySelectorAll("main section").forEach(sec => sec.hidden = sec.id !== id);
+        if (id === "quiz") newQuiz();
+        if (id === "read") renderRead();
+      });
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(() => {});
+      });
+    }
+
+    renderAll();
+    newQuiz();
+  </script>
+</body>
+</html>
