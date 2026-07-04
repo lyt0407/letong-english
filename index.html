@@ -3487,7 +3487,7 @@ function renderDay(){
       </div>
     </section>`;
 }
-function escapeJS(s){ return String(s).replace(/\/g,'\\').replace(/'/g,"\'"); }
+function escapeJS(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' '); }
 function prevDay(){ if(currentDay>1) openDay(currentDay-1); }
 function nextDay(){ if(currentDay<60) openDay(currentDay+1); }
 function markRead(part){
